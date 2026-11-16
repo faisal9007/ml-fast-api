@@ -3,13 +3,19 @@ name = "backend"
 version = "0.1.0"
 requires-python = "==3.12.*"
 dependencies = [
-    "fastapi>=0.163.1",
-    "pillow>=13.0.0",
-    "python-multipart>=0.0.34",
-    "torch>=2.15.0",
-    "torchvision>=0.29.2",
-    "uvicorn>=0.54.0",
+    "fastapi",
+    "pillow",
+    "python-multipart",
+    "torch",
+    "torchvision",
+    "uvicorn",
 ]
 
 [[tool.uv.index]]
-url = "https://pytorch.org/"
+name = "pytorch-cpu"
+url = "https://pytorch.org"
+explicit = true
+
+[tool.uv.sources]
+torch = { index = "pytorch-cpu" }
+torchvision = { index = "pytorch-cpu" }

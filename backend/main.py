@@ -16,6 +16,7 @@ app = FastAPI(title="Image Classifier API")
 app.add_middleware(CORSMiddleware, allow_origins=["*"], allow_methods=["*"], allow_headers=["*"])
 
 
+
 @app.post("/predict")
 def predict(file: UploadFile):
     # Don't trust the file name or type the client sends: try to open it as an image

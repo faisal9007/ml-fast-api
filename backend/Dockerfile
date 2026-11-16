@@ -7,11 +7,17 @@ WORKDIR /app
 ENV UV_COMPILE_BYTECODE=1
 ENV UV_LINK_MODE=copy
 
-COPY pyproject.toml ./
-RUN uv sync --no-install-project --no-dev
-
+# Create virtual environment
+RUN uv venv /app/.venv
 ENV PATH="/app/.venv/bin:$PATH"
 
+# Install FastAPI & image dependencies
+RUN uv pip install fastapi uvicorn pillow python-multipart
+
+# Install lightweight CPU-only PyTorch and TorchVision
+RUN uv pip install torch torchvision --index-url https://download.pytorch.org/whl/cpu
+
+# Copy application code
 COPY main.py .
 
 EXPOSE 8000
