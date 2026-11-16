@@ -1,0 +1,7 @@
+services:
+  api:
+    build: .
+    container_name: image-classifier-api
+    ports:
+      - "8021:8000"
+    restart: unless-stopped

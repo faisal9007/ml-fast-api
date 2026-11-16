@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Image Classifier</title>
+  <style>
+    body { font-family: system-ui, sans-serif; max-width: 480px; margin: 40px auto; text-align: center; }
+    input, button { margin-top: 16px; padding: 10px 16px; font-size: 16px; }
+    img { max-width: 100%; max-height: 260px; margin-top: 16px; border-radius: 8px; display: none; }
+    #result { margin-top: 20px; font-size: 18px; font-weight: bold; }
+  </style>
+</head>
+<body>
+  <h2>Image Classifier API</h2>
+  <input type="file" id="imageInput" accept="image/*" />
+  <br />
+  <img id="preview" alt="Image preview" />
+  <br />
+  <button onclick="classifyImage()">Predict Image</button>
+  <div id="result"></div>
+
+  <script>
+    const imageInput = document.getElementById("imageInput");
+    const preview = document.getElementById("preview");
+    const result = document.getElementById("result");
+
+    imageInput.addEventListener("change", () => {
+      const file = imageInput.files[0];
+      if (file) {
+        preview.src = URL.createObjectURL(file);
+        preview.style.display = "inline-block";
+      }
+    });
+
+    async function classifyImage() {
+      const file = imageInput.files[0];
+      if (!file) {
+        result.textContent = "Please select an image first.";
+        return;
+      }
+
+      result.textContent = "Predicting...";
+      const formData = new FormData();
+      formData.append("file", file);
+
+      try {
+        const response = await fetch("http://localhost:8021/predict", {
+         method: "POST",
+         body: formData,
+        });
+
+        const data = await response.json();
+        if (!response.ok) {
+          result.textContent = `Error: ${data.detail}`;
+        } else {
+          result.textContent = `Prediction: ${data.label} (${(data.confidence * 100).toFixed(2)}%)`;
+        }
+      } catch (err) {
+        result.textContent = "Could not reach the API. Make sure Docker is running on port 8000.";
+      }
+    }
+  </script>
+</body>
+</html>
